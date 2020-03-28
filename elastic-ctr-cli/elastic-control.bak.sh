@@ -101,7 +101,7 @@ function install_volcano() {
     kubectl get crds | grep jobs.batch.volcano.sh >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "volcano not found, now install"
-        kubectl apply -f volcano-development.yaml
+        kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/master/installer/volcano-development.yaml
     fi
 
 }
@@ -382,8 +382,6 @@ datafile_config()
 function apply()
 {
     echo "Waiting for pod..."
-    kubectl create rolebinding default-view --clusterrole=view --serviceaccount=default:default --namespace=default
-
     check_tools kubectl 
     install_volcano
     kubectl get pod | grep cube | awk {'print $1'} | xargs kubectl delete pod >/dev/null 2>&1
@@ -425,9 +423,7 @@ TEMP=`getopt -n elastic-control -o crahu:m:t:p:b:f:s:v:l --longoption config_cli
 # Die if they fat finger arguments, this program will be run as root
 [ $? = 0 ] || die "Error parsing arguments. Try $0 --help"
 
-# eval set -- "$TEMP"
-
-echo $1 $2
+eval set -- "$TEMP"
 while true; do
     case $1 in
         -c|--config_client)
@@ -482,7 +478,7 @@ while true; do
     esac
 done
 
-if [[ $CMD = "config_resource" ]]; then
+if [ $CMD = "config_resource" ]; then
 
     if ! grep '^[[:digit:]]*$' <<< "$CPU" >> /dev/null || [ $CPU -lt 1 ] || [ $CPU -gt 4 ]; then
         die "Invalid CPU Num, should be greater than 0 and less than 5."
@@ -523,9 +519,3 @@ status)
     help
     ;;
 esac
-
-
-# sh elastic-control.sh -r -u 1 -m 2 -t 2 -p 2 -b 2 -s slot.conf -f data.config --
-# sh elastic-control.sh -a --
-# sh elastic-control.sh -l --
-# sh elastic-control.sh -c --
