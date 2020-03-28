@@ -34,6 +34,10 @@ ElasticREC采用PaddlePaddle提供的全异步分布式训练方式，在保证�
 
 ## <span id='head3'>3. 一键部署教程</span>
 
+此部署需要hdfs环境，如果你还没hdfs环境，需要在机器节点上部署一个，可以参数hdfs/install_hdfs.sh（仅针对Ubuntu16.04）。
+
+另外，此代码库没有包含数据集，您可以参数dataset/download_data.sh脚本，下载、预处理数据集，并put到hdfs上。
+
 您可以使用我们提供的脚本elastic-control.sh来完成部署，在运行脚本前，请确保您的机器装有python3并通过pip安装了mlflow，安装mlflow的命令如下：
 ```bash
 python3 -m pip install mlflow -i https://pypi.tuna.tsinghua.edu.cn/simple
@@ -75,6 +79,8 @@ bash elastic-control.sh -a
 bash elastic-control.sh -l
 bash elastic-control.sh -c
 ```
+
+*注意：执行-r前记得先update配置文件data.config*
 
 ## <span id='head4'>4. 训练进度追踪</span>
 我们提供了两种方法让用户可以观察训练的进度，具体方式如下：
